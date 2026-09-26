@@ -16,37 +16,35 @@
 #include "command.h"
 #include "commands.h"
 
-/** Parâmetro das ações de LED, apontado por @ref command.arg. */
-struct led_action {
-	const char *label;
-	bool on;
-};
-
-static const struct led_action acender_verde = {.label = "verde", .on = true};
-static const struct led_action apagar_verde = {.label = "verde", .on = false};
+/** LED sobre o qual os comandos de acender e apagar atuam. */
+static const char led_alvo[] = "verde";
 
 /**
- * Acender e apagar são a mesma ação com dados diferentes: dois comandos,
- * uma função. É o que o Command Pattern permite e um switch não.
+ * Acender e apagar diferem só pelo estado pedido, então compartilham a
+ * implementação e cada comando entra na tabela como uma ação própria.
  */
-static void led_execute(const struct command *self)
+static void led_set(bool on)
 {
-	const struct led_action *action = self->arg;
-
-	printk("LED %s %s\n", action->label, action->on ? "aceso" : "apagado");
+	printk("LED %s %s\n", led_alvo, on ? "aceso" : "apagado");
 }
 
-static void uptime_execute(const struct command *self)
+static void led_on_execute(void)
 {
-	ARG_UNUSED(self);
+	led_set(true);
+}
 
+static void led_off_execute(void)
+{
+	led_set(false);
+}
+
+static void uptime_execute(void)
+{
 	printk("Uptime: %lld ms\n", k_uptime_get());
 }
 
-static void reboot_execute(const struct command *self)
+static void reboot_execute(void)
 {
-	ARG_UNUSED(self);
-
 	printk("Reiniciando o sistema\n");
 }
 
@@ -54,14 +52,14 @@ static void reboot_execute(const struct command *self)
  * Acrescentar um comando é acrescentar a ação acima e uma linha aqui. O
  * despachante em command.c não muda.
  */
-static const struct command table[] = {
-	{.name = "led_on", .execute = led_execute, .arg = &acender_verde},
-	{.name = "led_off", .execute = led_execute, .arg = &apagar_verde},
-	{.name = "uptime", .execute = uptime_execute, .arg = NULL},
-	{.name = "reboot", .execute = reboot_execute, .arg = NULL},
+static const command_t table[] = {
+	{.name = "led_on", .execute = led_on_execute},
+	{.name = "led_off", .execute = led_off_execute},
+	{.name = "uptime", .execute = uptime_execute},
+	{.name = "reboot", .execute = reboot_execute},
 };
 
-const struct command *commands_get_table(size_t *count)
+const command_t *commands_get_table(size_t *count)
 {
 	if (count == NULL) {
 		return NULL;

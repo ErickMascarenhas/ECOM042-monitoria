@@ -12,14 +12,14 @@
 
 #include "command.h"
 
-enum command_status command_dispatch(const struct command *table, size_t count, const char *name)
+command_status_t command_dispatch(const command_t *table, size_t count, const char *name)
 {
 	if (table == NULL || name == NULL) {
 		return COMMAND_INVALID;
 	}
 
 	for (size_t i = 0; i < count; i++) {
-		const struct command *entry = &table[i];
+		const command_t *entry = &table[i];
 
 		if (entry->name == NULL || strcmp(entry->name, name) != 0) {
 			continue;
@@ -29,7 +29,7 @@ enum command_status command_dispatch(const struct command *table, size_t count, 
 			return COMMAND_INVALID;
 		}
 
-		entry->execute(entry);
+		entry->execute();
 
 		return COMMAND_OK;
 	}

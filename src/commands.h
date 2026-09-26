@@ -21,6 +21,6 @@
  *
  * @return Ponteiro para a tabela, ou NULL se @p count for NULL.
  */
-const struct command *commands_get_table(size_t *count);
+const command_t *commands_get_table(size_t *count);
 
 #endif /* COMMANDS_H_ */

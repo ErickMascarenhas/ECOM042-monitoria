@@ -19,7 +19,7 @@
 int main(void)
 {
 	size_t count = 0;
-	const struct command *table = commands_get_table(&count);
+	const command_t *table = commands_get_table(&count);
 
 	/* O último rótulo não está na tabela: exercita o caminho de erro. */
 	static const char *const requests[] = {
@@ -28,7 +28,7 @@ int main(void)
 
 	for (size_t i = 0; i < ARRAY_SIZE(requests); i++) {
 		const char *name = requests[i];
-		enum command_status result = command_dispatch(table, count, name);
+		command_status_t result = command_dispatch(table, count, name);
 
 		if (result != COMMAND_OK) {
 			printk("Comando \"%s\" nao executado (%d)\n", name, result);

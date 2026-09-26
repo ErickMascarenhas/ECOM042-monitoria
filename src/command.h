@@ -18,24 +18,22 @@
  * É tudo o que o despachante enxerga: um rótulo e uma ação. Qual ação é
  * essa, e o que ela faz por baixo, não interessa a quem despacha.
  */
-struct command {
+typedef struct {
 	/** Rótulo pelo qual o comando é invocado. */
 	const char *name;
-	/** Ação do comando; recebe a própria entrada para poder ler @ref arg. */
-	void (*execute)(const struct command *self);
-	/** Dado do comando, opaco para o despachante. */
-	const void *arg;
-};
+	/** Ação que o comando executa. */
+	void (*execute)(void);
+} command_t;
 
 /** Resultado de uma tentativa de despacho. */
-enum command_status {
+typedef enum {
 	/** Comando encontrado e executado. */
 	COMMAND_OK = 0,
 	/** Nenhuma entrada da tabela corresponde ao rótulo pedido. */
 	COMMAND_NOT_FOUND = -1,
 	/** Argumento inválido, ou entrada da tabela sem ação. */
 	COMMAND_INVALID = -2,
-};
+} command_status_t;
 
 /**
  * @brief Procura @p name na tabela e executa o comando correspondente.
@@ -50,6 +48,6 @@ enum command_status {
  *
  * @return COMMAND_OK, COMMAND_NOT_FOUND ou COMMAND_INVALID.
  */
-enum command_status command_dispatch(const struct command *table, size_t count, const char *name);
+command_status_t command_dispatch(const command_t *table, size_t count, const char *name);
 
 #endif /* COMMAND_H_ */
