@@ -10,11 +10,12 @@
 
 #include <zephyr/kernel.h>
 
-#include "sensor.h"
+#include "board_io.h"
 
 int main(void)
 {
-	printk("Sensor value: %d\n", sensor_read_mock());
-
+	/* TODO (Atividade-03): chamar io_init() e, pra cada valor da sequência
+	 * 0, 1, 0, 1: simular o botão e imprimir "Button: X -> LED: X".
+	 */
 	return 0;
 }
