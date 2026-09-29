@@ -1,0 +1,24 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * O native_sim descreve apenas o LED (led0, pino 0 de gpio0). O botão não
+ * existe na board, então é descrito aqui: pino 1 do mesmo controlador
+ * emulado, ativo em nível alto, exposto pelo alias sw0.
+ */
+
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+	buttons {
+		compatible = "gpio-keys";
+
+		button0: button_0 {
+			gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+			label = "User button";
+		};
+	};
+
+	aliases {
+		sw0 = &button0;
+	};
+};
